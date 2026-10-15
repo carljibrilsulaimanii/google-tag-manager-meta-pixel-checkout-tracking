@@ -1,0 +1,31 @@
+<!--
+  meta-purchase-order-confirmation.html -- GTM Custom HTML tag
+  Author:  Jibril Sulaiman
+  Created: 2026-10-15 (from a build designed May 2025)
+  Deploy:  Tag Manager > Tags > New > Custom HTML.
+           Name: FB Purchase - Order Confirmation.
+           Trigger: DOM Ready - Order Confirmation (see the README, Step 7).
+           Advanced Settings > Tag Sequencing: fire "Meta Pixel - Base" before
+           this tag, so fbq exists when it runs.
+  What:    Sends Meta's Purchase event with the real order total and order number,
+           both scraped from the confirmation page by GTM variables. No checkout
+           code changes and no server-side Conversions API.
+  Why:     The checkout's own Purchase event sent no value on about half of
+           orders, so Meta couldn't report revenue or optimise for value.
+           Notes on the fields:
+           - value must be a number: use Clean Grand Total, never the raw text.
+           - eventID goes in the 4th argument, not inside the event data. Using
+             the order number means a server-side copy of this Purchase, if you
+             add one later, is de-duplicated against it.
+           - _fbp and _fbc are read from their cookies by the pixel itself; they
+             don't go in this call.
+-->
+<script>
+  fbq('track', 'Purchase', {
+    value: {{Clean Grand Total}},
+    currency: 'USD',
+    order_id: '{{Order Number}}'
+  }, {
+    eventID: '{{Order Number}}'
+  });
+</script>

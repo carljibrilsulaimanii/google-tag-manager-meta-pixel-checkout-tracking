@@ -1,0 +1,33 @@
+<!--
+  set-facebook-attribution-cookies.html -- GTM Custom HTML tag
+  Author:  Jibril Sulaiman
+  Created: 2026-10-15 (from a production build first shipped May 2025)
+  Deploy:  Tag Manager > Tags > New > Custom HTML.
+           Name: Set Facebook Attribution Cookies. Trigger: All Pages.
+  What:    When a visitor lands from a Meta ad (fbclid in the URL), keeps two
+           first-party cookies for 90 days:
+             _fbc    fb.1.<timestamp>.<fbclid>  the click id in Meta's own format
+             fbclid  the raw click id, for your own reports (GA4, Looker Studio)
+  Why:     fbclid exists only in the landing URL. A buyer who comes back days later
+           by typing the address has no fbclid, so the order can't be tied to the
+           ad unless the click id was saved on the first visit. The Meta pixel also
+           writes _fbc, but only on pages where the pixel itself loads at landing;
+           this tag saves it on every page the container runs on.
+-->
+<script>
+  function setCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + value + expires + "; path=/";
+  }
+
+  var fbclid = new URLSearchParams(window.location.search).get('fbclid');
+  if (fbclid) {
+    setCookie('_fbc', 'fb.1.' + Date.now() + '.' + fbclid, 90);  // used by Meta
+    setCookie('fbclid', fbclid, 90);  // for logging/analytics
+  }
+</script>

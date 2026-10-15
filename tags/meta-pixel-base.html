@@ -1,0 +1,32 @@
+<!--
+  meta-pixel-base.html -- GTM Custom HTML tag
+  Author:  Jibril Sulaiman
+  Created: 2026-10-15 (from a production build first shipped May 2025)
+  Deploy:  Tag Manager > Tags > New > Custom HTML.
+           Name: Meta Pixel - Base. Trigger: All Pages.
+           Replace YOUR_PIXEL_ID (two places) with your dataset / pixel id from
+           Meta Events Manager.
+  What:    Meta's standard pixel base code: loads fbevents.js, starts the pixel and
+           sends PageView on every page.
+  Why:     Tag Manager has no built-in "Facebook Pixel" tag type, so the pixel goes
+           in as Custom HTML. The Purchase tag only works on pages where this base
+           code has already run.
+           Skip this tag if your site already loads the pixel base code in its
+           template: two base codes send every PageView twice.
+-->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', 'YOUR_PIXEL_ID');
+  fbq('track', 'PageView');
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+       src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/>
+</noscript>
